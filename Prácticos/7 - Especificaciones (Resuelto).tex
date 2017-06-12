@@ -1,0 +1,62 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper,margin=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+
+\newcommand\doubleplus{+\kern-1.6ex+\kern0.8ex}
+
+\title{Practico 7 - Especificaciones}
+\author{Mariano Córdoba}
+
+\begin{document}
+
+\begin{center}
+\large \underline{\textbf{Práctico 7 - Especificaciones}}
+\end{center}
+
+\textbf{Ejercicio 1}
+
+\begin{itemize}
+    \item $ f.xs = \langle \forall_i : 0 < i < \#xs : xs.i = xs.0 \rangle $
+    \item $ f.xs = \langle \forall_{i,j} : 0 \le i < j < \#xs : xs.i \neq xs.j \rangle $
+    \item $ f.xs = \langle \exists_i : 0 \le i < \#xs : xs.i = 1 \rangle \Rightarrow \langle\exists_i : 0 \le i < \#xs : xs.i = 0 \rangle  $
+    \item $ f.xs = \langle \Pi_i : 0 \le i < \#xs \land primo.(xs.i) : xs.i \rangle $
+\end{itemize}
+
+\textbf{Ejercicio 2}
+
+\begin{itemize}
+    \item $ f.xs = \langle Min_i : 0 \le i < \#xs \land xs.i = True : i \rangle $
+    \item $ f.xs = \langle Max_i : 0 \le i < \#xs \land xs.i = True : i \rangle $
+    \item $ f.xs = \langle \forall_i : 0 < i < \#xs : xs.i = xs.0 \rangle $
+\end{itemize}
+
+\textbf{Ejercicio 3}
+
+\begin{itemize}
+    \item $ f.xs = \langle N_i : 0 \le i < \#xs : par.(xs.i) \rangle = \langle N_i : 0 \le i < \#xs : \neg par.(xs.i) \rangle$
+    \item $ f.n = |n| > 1 \land \neg \langle \exists_k : 2 \le k \le \sqrt{n} : n \bmod k = 0 \rangle $
+    \item $ espejo.xs = \langle \forall_i : 0 \le i < \#xs : xs.(\#xs - (i + 1)) \rangle $
+    \item $ f.xs = \langle \exists_{as,bs,cs} : xs = as \doubleplus bs \doubleplus cs \land \#bs > 1 \land \langle \forall_i : 0 \le i < \#bs : bs.i = bs.(\#bs - (i + 1)) \rangle \rangle $
+    \item $ f.xs.ys = \langle \exists_{as,bs} :: xs = as \doubleplus ys \doubleplus bs \rangle $
+    \item $ f.xs.ys = \langle \exists_{as} :: xs = as \doubleplus ys \rangle $
+\end{itemize}
+
+\textbf{Ejercicio 4}
+
+\begin{itemize}
+    \item $ P.xs.ys = \langle \exists_{as,bs} :: xs = as \doubleplus ys \doubleplus bs \rangle $
+    \item $ f.xs = \langle Min_{as,bs,cs} : xs = as \doubleplus bs \doubleplus cs : sum.bs \rangle $
+    \item $ f.xs = \langle Max_{as,bs,cs} : xs = as \doubleplus bs \doubleplus cs \land \langle \forall_i : 0 < i < \#bs : bs.i = bs.0 \rangle : \#bs \rangle $
+\end{itemize}
+
+\textbf{Ejercicio 5}
+
+\begin{itemize}
+    \item \text{Determinar si todos los elementos de la lista son mayores o iguales a cero}
+    \item \text{Determinar si existe un elemento de la lista menor que el que le sigue}
+    \item \text{Determinar si algún elemento de la lista es cero}
+    \item \text{Determinar si todos los elementos de la lista son iguales}
+\end{itemize}
+
+\end{document}
