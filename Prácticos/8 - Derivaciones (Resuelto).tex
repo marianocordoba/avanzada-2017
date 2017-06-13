@@ -1,0 +1,169 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper,margin=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+
+\newcommand\doubleplus{+\kern-1.6ex+\kern0.8ex}
+
+\title{Practico 8 - Derivaciones}
+\author{Mariano Córdoba}
+
+\begin{document}
+
+\begin{center}
+\large \underline{\textbf{Práctico 8 - Derivaciones}}
+\end{center}
+
+\textbf{Ejercicio 1}
+
+\begin{itemize}
+    \item $ f.xs = \langle \forall_i : 0 < i < \#xs : xs.i = xs.0 \rangle $
+
+    \bigbreak
+
+    Casos base:\\
+    $ f.[] $\\
+    = \{Especificación\}\\
+    $ \langle \forall_i : 0 < i < \#[] : xs.[] = xs.0 \rangle $\\
+    = \{Definición de \#\}\\
+    $ \langle \forall_i : 0 < i < 0 : xs.[] = xs.0 \rangle $\\
+    = \{Rango vacío\}\\
+    $ True $
+
+    \bigbreak
+
+    $ f.[x] $\\
+    = \{Especificación\}\\
+    $ \langle \forall_i : 0 < i < \#[x] : xs.[x] = xs.0 \rangle $\\
+    = \{Definición de \#\}\\
+    $ \langle \forall_i : 0 < i < 1 : xs.[x] = xs.0 \rangle $\\
+    = \{Rango vacío\}\\
+    $ True $
+
+    \bigbreak
+
+    Caso inductivo:\\
+    $ f.(x \triangleright xs) $\\
+    = \{Especificación\}\\
+    $ \langle \forall_i : 0 < i < \#(x \triangleright xs) : (x \triangleright xs).i = (x \triangleright xs).0 \rangle $\\
+    = \{Definición de \#\}\\
+    $ \langle \forall_i : 0 < i < 1 + \#xs : (x \triangleright xs).i = (x \triangleright xs).0 \rangle $\\
+    = \{Separación de un término\}\\
+    $ (x \triangleright xs).(0 + 1) = (x \triangleright xs).0 \land \langle \forall_i : 0 < i < \#xs : (x \triangleright xs).(i + 1) = (x \triangleright xs).0 \rangle $\\
+    = \{Propiedad de .\}\\
+    $ xs.0 = x \land \langle \forall_i : 0 < i < \#xs : xs.i = x \rangle $\\
+    = \{Leibnitz\}\\
+    $ xs.0 = x \land \langle \forall_i : 0 < i < \#xs : xs.i = xs.0 \rangle $\\
+    = \{Hipótesis inductiva\}\\
+    $ xs.0 = x \land f.xs $
+    
+    \rule{\linewidth}{1px}
+
+    \item $ f.xs.x = \langle \exists_i : 0 \le i < \#xs : xs.i = x \rangle $
+
+    \bigbreak 
+
+    Caso base:\\
+    $ f.[].x $\\
+    = \{Especificación\}\\
+    $ \langle \exists_i : 0 \le i < \#[] : [].i = x \rangle $\\
+    = \{Definición de \#\}\\
+    $ \langle \exists_i : 0 \le i < 0 : [].i = x \rangle $\\
+    = \{Rango vacío\}\\
+    $ False $
+
+    \bigbreak
+
+    Caso inductivo:\\
+    $ f.(y \triangleright xs).x $\\
+    = \{Especificación\}\\
+    $ \langle \exists_i : 0 \le i < \#(y \triangleright xs) : (y \triangleright xs).i = x \rangle $\\
+    = \{Definición de \#\}\\
+    $ \langle \exists_i : 0 \le i < 1 + \#xs : (y \triangleright xs).i = x \rangle $\\
+    = \{Separación de un término\}\\
+    $ (y \triangleright xs).0 = x \lor \langle \exists_i : 0 \le i < \#xs : (y \triangleright xs).(i + 1) = x \rangle $\\
+    = \{Propiedad de .\}\\
+    $ y = x \lor \langle \exists_i : 0 \le i < \#xs : xs.i = x \rangle $\\
+    = \{Hipótesis inductiva\}\\
+    $ y = x \lor f.xs.x $
+
+    \rule{\linewidth}{1px}
+
+    \item $ f.xs.x = \langle \forall_i : 0 \le i < \#xs : xs.i = x \rangle $
+
+    \bigbreak
+
+    Caso base:\\
+    $ f.[].x $\\
+    = \{Especificación\}\\
+    $ \langle \forall_i : 0 \le i < \#[] : [].i = x \rangle $\\
+    = \{Definición de \#\}\\
+    $ \langle \forall_i : 0 \le i < 0 : [].i = x \rangle $\\
+    = \{Rango vacío\}\\
+    $ True $
+
+    \bigbreak
+
+    Caso inductivo:\\
+    $ f.(y \triangleright xs).x $\\
+    = \{Especificación\}\\
+    $ \langle \forall_i : 0 \le i < \#(y \triangleright xs) : (y \triangleright xs).i = x \rangle $\\
+    = \{Definición de \#\}\\
+    $ \langle \forall_i : 0 \le i < 1 + \#xs : (y \triangleright xs).i = x \rangle $\\
+    = \{Separación de un término\}\\
+    $ (y \triangleright xs).0 = x \land \langle \forall_i : 0 \le i < \#xs : (y \triangleright xs).(i + 1) = x \rangle $\\
+    = \{Propiedad de .\}\\
+    $ y = x \land \langle \forall_i : 0 \le i < \#xs : xs.i = x \rangle $\\
+    = \{Hipótesis inductiva\}\\
+    $ y = x \land f.xs.x $
+
+    \rule{\linewidth}{1px}
+
+    \item $ f.xs.ys = \langle \forall_i : 0 \le i < \#xs \lor 0 \le i < \#ys : \#xs = \#ys \land xs.i = ys.i \rangle $
+
+    \bigbreak
+
+    Caso ($ xs = [], ys = []$):\\
+    $ f.[].[] $\\
+    = \{Especificación\}\\
+    $ \langle \forall_i : 0 \le i < \#[] \lor 0 \le i < \#[] : \#[] = \#[] \land [].i = [].i \rangle $
+    = \{Definición de \#\}\\
+    $ \langle \forall_i : 0 \le i < 0 \lor 0 \le i < 0 : 0 = 0 \land [].i = [].i \rangle $
+    = \{Rango vacío\}\\
+    $ True $
+
+    \bigbreak
+
+    Caso ($ xs = [], ys = (y \triangleright ys) $):\\
+    $ f.[].(y \triangleright ys) $\\
+    = \{Especificación\}\\
+    $ \langle \forall_i : 0 \le i < \#[] \lor 0 \le i < \#(y \triangleright ys) : \#[] = \#(y \triangleright ys) \land [].i = (y \triangleright ys).i \rangle $\\
+    = \{$ \#[] \neq \#(y \triangleright ys) $\}\\
+    $ \langle \forall_i : 0 \le i < \#[] \lor 0 \le i < \#(y \triangleright ys) : False \land [].i = (y \triangleright ys).i \rangle $\\
+    = \{Lógica\}\\
+    $ \langle \forall_i : 0 \le i < \#[] \lor 0 \le i < \#(y \triangleright ys) : False \rangle $\\
+    = \{Término constante\}\\
+    $ False $
+
+    \bigbreak
+
+    Análogamente se resuelve $ f.(x \triangleright xs).[] $
+
+    \bigbreak
+
+    Caso inductivo:\\
+    $ f.(x \triangleright xs).(y \triangleright ys) $\\
+    = \{Especificación\}\\
+    $ \langle \forall_i : 0 \le i < \#(x \triangleright xs) \lor 0 \le i < \#(y \triangleright ys) : \#(x \triangleright xs) = \#(y \triangleright ys) \land (x \triangleright xs).i = (y \triangleright ys).i \rangle $\\
+    = \{Definición de \#\}\\
+    $ \langle \forall_i : 0 \le i < 1 + \#xs \lor 0 \le i < 1 + \#ys : 1 + \#xs = 1 + \#ys \land (x \triangleright xs).i = (y \triangleright ys).i \rangle $\\
+    = \{Separación de un término, aritmética\}\\
+    $ \#xs = \#ys \land (x \triangleright xs).0 = (y \triangleright ys).0 \land \langle \forall_i : 0 \le i < \#xs \lor 0 \le i < \#ys : \#xs = \#ys \land (x \triangleright xs).(i + 1) = (y \triangleright ys).(i + 1) \rangle $\\
+    = \{Propiedad de .\}\\
+    $ \#xs = \#ys \land x = y \land \langle \forall_i : 0 \le i < \#xs \lor 0 \le i < \#ys : \#xs = \#ys \land xs.i = ys.i \rangle $\\
+    = \{Hipótesis inductiva\}\\
+    $ \#xs = \#ys \land x = y \land f.xs.ys $\\
+
+\end{itemize}
+
+\end{document}
