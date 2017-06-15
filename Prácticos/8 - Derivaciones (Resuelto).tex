@@ -2,8 +2,13 @@
 \usepackage[a4paper,margin=2cm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{eqparbox}
+\usepackage[fleqn]{amsmath}
 
-\newcommand\doubleplus{+\kern-1.6ex+\kern0.8ex}
+\setlength{\mathindent}{0pt}
+\newcommand{\concat}{%
+  \mathbin{{+}\mspace{-8mu}{+}}%
+}
 
 \title{Practico 8 - Derivaciones}
 \author{Mariano Córdoba}
@@ -163,6 +168,512 @@
     $ \#xs = \#ys \land x = y \land \langle \forall_i : 0 \le i < \#xs \lor 0 \le i < \#ys : \#xs = \#ys \land xs.i = ys.i \rangle $\\
     = \{Hipótesis inductiva\}\\
     $ \#xs = \#ys \land x = y \land f.xs.ys $\\
+
+\end{itemize}
+
+\bigbreak
+
+\textbf{Ejercicio 2}
+
+\begin{itemize}
+    \item $ f.xs = \langle \forall_i : 0 \le i < \#xs - 1 : xs.i < xs.(i + 1) \rangle $
+
+    \bigbreak
+
+    Caso base:\\
+    $ f.[] $\\
+    = \{Especificación\}\\
+    $ \langle \forall_i : 0 \le i < \#[] - 1 : [].i < [].(i + 1) \rangle $\\
+    = \{Definición de \#, aritmética\}\\
+    $ \langle \forall_i : 0 \le i < -1 : [].i < [].(i + 1) \rangle $\\
+    = \{Rango vacío\}\\
+    $ True $
+
+    \bigbreak
+
+    Caso inductivo:\\
+    $ f.(x \triangleright xs ) $\\
+    = \{Especificación\}\\
+    $ \langle \forall_i : 0 \le i < \#(x \triangleright xs ) - 1 : (x \triangleright xs ).i < (x \triangleright xs ).(i + 1) \rangle $\\
+    = \{Definición de \#, aritmética\}\\
+    $ \langle \forall_i : 0 \le i < \#xs : (x \triangleright xs ).i < (x \triangleright xs ).(i + 1) \rangle $\\
+    = \{Separación de un término\}\\
+    $ (x \triangleright xs ).0 < (x \triangleright xs ).(0 + 1) \land \langle \forall_i : 0 \le i < \#xs : (x \triangleright xs ).(i + 1) < (x \triangleright xs ).(i + 2) \rangle $\\
+    = \{Propiedad de .\}\\
+    $ x < xs.0 \land \langle \forall_i : 0 \le i < \#xs - 1 : xs.i < xs.(i + 1) \rangle $\\
+    = \{Hipótesis inductiva\}\\
+    $ x < xs.0 \land f.xs $
+
+\end{itemize}
+
+\bigbreak
+
+\textbf{Ejercicio 3}
+
+\begin{itemize}
+    \item $ m.xs = \langle Min_i : 0 \le i < \#xs : xs.i \rangle $
+
+    \bigbreak
+
+    Caso base:\\
+    $ m.[] $\\
+    = \{Especificación\}\\
+    $ \langle Min_i : 0 \le i < \#[] : [].i \rangle $\\
+    = \{Definición de \#\}\\
+    $ \langle Min_i : 0 \le i < 0 : [].i \rangle $\\
+    = \{Rango vacío\}\\
+    $ \infty $
+
+    \bigbreak
+
+    Caso inductivo:\\
+    $ m.(x \triangleright xs) $\\
+    = \{Especificación\}\\
+    $ \langle Min_i : 0 \le i < \#(x \triangleright xs) : (x \triangleright xs).i \rangle $\\ 
+    = \{Definición de \#\}\\
+    $ \langle Min_i : 0 \le i < 1 + \#xs : (x \triangleright xs).i \rangle $\\ 
+    = \{Separación de un término\}\\
+    $ (x \triangleright xs).0 `Min` \langle Min_i : 0 \le i < 1 + \#xs : (x \triangleright xs).(i + 1) \rangle $\\ 
+    = \{Propiedad de .\}\\
+    $ x \ Min\ \langle Min_i : 0 \le i < \#xs : xs.i \rangle $\\ 
+    = \{Hipótesis inductiva\}\\
+    $ x \ Min\ m.xs $
+
+\end{itemize}
+
+\textbf{Ejercicio 4}
+
+\begin{itemize}
+    \item $ f.xs = \langle \exists_i : 0 \le i < \#xs : xs.i = sum(xs) - xs.i \rangle $
+
+    \bigbreak 
+
+    Caso base:\\
+    $ f.[] $\\
+    = \{Especificación\}\\
+    $ \langle \exists_i : 0 \le i < \#[] : [].i = sum([]) - [].i \rangle $\\
+    = \{Definición de \#\}\\
+    $ \langle \exists_i : 0 \le i < 0 : [].i = sum([]) - [].i \rangle $\\
+    = \{Rango vacío\}\\
+    $ False $
+
+    \bigbreak
+
+    Caso inductivo:\\
+    $ f.(x \triangleright xs) $\\
+    = \{Especificación\}\\
+    $ \langle \exists_i : 0 \le i < \#(x \triangleright xs) : (x \triangleright xs).i = sum((x \triangleright xs)) - (x \triangleright xs).i \rangle $\\
+    = \{Definición de \#\}\\
+    $ \langle \exists_i : 0 \le i < 1 + \#xs : (x \triangleright xs).i = sum((x \triangleright xs)) - (x \triangleright xs).i \rangle $\\
+    = \{Separación de un término\}\\
+    $ (x \triangleright xs).0 = sum((x \triangleright xs)) - (x \triangleright xs).0 \lor \langle \exists_i : 0 \le i < \#xs : (x \triangleright xs).(i + 1) = sum((x \triangleright xs)) - (x \triangleright xs).(i + 1) \rangle $\\
+    = \{Propiedad de .\}\\
+    $ x = sum((x \triangleright xs)) - x \lor \langle \exists_i : 0 \le i < \#xs : xs.i = sum((x \triangleright xs)) - xs.i \rangle $\\
+    = \{Propiedad de sum, aritmética\}\\
+    $ x = sum(xs) \lor \langle \exists_i : 0 \le i < \#xs : xs.i = x + sum(xs) - xs.i \rangle $
+
+    \bigbreak
+
+    No se puede aplicar la hipótesis inductiva, hay que generalizar.
+
+    \item $ g.xs.n = \langle \exists_i : 0 \le i < \#xs : xs.i = n + sum(xs) - xs.i \rangle $
+
+    \bigbreak
+
+    Caso base:\\
+    $ g.[].n $
+    = \{Especificación\}\\
+    $ \langle \exists_i : 0 \le i < \#[] : [].i = n + sum([]) - [].i \rangle $\\
+    = \{Definición de \#\}\\
+    $ \langle \exists_i : 0 \le i < 0 : [].i = n + sum([]) - [].i \rangle $\\
+    = \{Rango vacío\}\\
+    $ False $
+
+    \bigbreak
+
+    Caso inductivo:\\
+    $ f.(x \triangleright xs).n $
+    = \{Especificación\}\\
+    $ \langle \exists_i : 0 \le i < \#(x \triangleright xs) : (x \triangleright xs).i = n + sum((x \triangleright xs)) - (x \triangleright xs).i \rangle $\\
+    = \{Definición de \#\}\\
+    $ \langle \exists_i : 0 \le i < 1 + \#xs : (x \triangleright xs).i = n + sum((x \triangleright xs)) - (x \triangleright xs).i \rangle $\\
+    = \{Separación de un término\}\\
+    $ (x \triangleright xs).0 = n + sum((x \triangleright xs)) - (x \triangleright xs).0 \lor \langle \exists_i : 0 \le i < \#xs : (x \triangleright xs).(i + 1) = n + sum((x \triangleright xs)) - (x \triangleright xs).(i + 1) \rangle $\\
+    = \{Propiedad de .\}\\
+    $ x = n + sum((x \triangleright xs)) - x \lor \langle \exists_i : 0 \le i < \#xs : xs.i = n + sum((x \triangleright xs)) - xs.i \rangle $\\
+    = \{Propiedad de sum, aritmética\}\\
+    $ x = n + sum(xs) \lor \langle \exists_i : 0 \le i < \#xs : xs.i = x + n + sum(xs) - xs.i \rangle $\\
+    = \{Asociatividad de +\}\\
+    $ x = n + sum(xs) \lor \langle \exists_i : 0 \le i < \#xs : xs.i = (x + n) + sum(xs) - xs.i \rangle $\\
+    = \{Hipótesis inductiva\}\\
+    $ x = n + sum(xs) \lor g.xs.(x + n) $
+
+    \bigbreak
+
+    El resultado completo de esta derivación es:
+    \[
+    \begin{array}{| r @{} l }
+        f ~ : ~ & [\text{Num}] \mapsto \text{Bool} \\
+        \rule[-10pt]{0pt}{0pt}g ~ : ~ & \text{Num} \mapsto [\text{Num}] \mapsto \text{Bool} \\
+        \cline{1-1}
+        \multicolumn{2}{|l}{\rule{0pt}{12pt}\eqmakebox[lhs][r]{$f.xs$} ~ \doteq ~ g.xs.0} \\
+        \multicolumn{2}{|l}{\eqmakebox[lhs][r]{$g.[].n$} ~ \doteq ~ False} \\
+        \multicolumn{2}{|l}{\eqmakebox[lhs][r]{$g.(x \triangleright xs).n$} ~ \doteq ~ n + sum(xs) \lor g.xs.(x + n)}
+    \end{array}
+    \]
+
+\end{itemize}
+
+\textbf{Ejercicio 5}
+
+\begin{itemize}
+    \item $ P.xs.ys = \langle \exists_{as,bs} :: ys = as \concat xs \concat bs \rangle $
+
+    \bigbreak
+
+    Caso ($xs = []$):\\
+    $ P.[].ys $
+    = \{Especificación\}\\
+    $ \langle \exists_{as,bs} :: ys = as \concat [] \concat bs \rangle $\\
+    = \{Definición de$~\concat$\}\\
+    $ \langle \exists_{as,bs} :: ys = as \concat bs \rangle $\\
+    = \{Partición de rango ($as = [] \lor as \neq []$)\}\\
+    $ \langle \exists_{as,bs} : as = [] : ys = [] \concat bs \rangle \lor \langle \exists_{as,bs} : as \neq [] : ys = as \concat bs \rangle $\\
+    = \{Anidado, rango unitario\}\\
+    $ \langle \exists_{bs} :: ys = [] \concat bs \rangle \lor \langle \exists_{as,bs} : as \neq [] : ys = as \concat bs \rangle $\\
+    = \{Definición de$~\concat$\}\\
+    $ \langle \exists_{bs} :: ys = bs \rangle \lor \langle \exists_{as,bs} : as \neq [] : ys = as \concat bs \rangle $\\
+    = \{Intercambio\}\\
+    $ \langle \exists_{bs} : ys = bs : True \rangle \lor \langle \exists_{as,bs} : as \neq [] : ys = as \concat bs \rangle $\\
+    = \{Rango unitario\}\\
+    $ True \lor \langle \exists_{as,bs} : as \neq [] : ys = as \concat bs \rangle $\\
+    = \{Absorción  para el $\lor$\}\\
+    $ True $
+
+    \bigbreak
+
+    Caso ($x \triangleright xs, ys = []$):\\
+    $ P.(x \triangleright xs).[] $\\
+    = \{Especificación\}\\
+    $ \langle \exists_{as,bs} :: [] = as \concat (x \triangleright xs) \concat bs \rangle $\\
+    = \{Igualdad de listas\}\\
+    $ \langle \exists_{as,bs} :: [] = as \land [] = (x \triangleright xs) \land [] = bs \rangle $\\
+    = \{Igualdad de listas\}\\
+    $ \langle \exists_{as,bs} :: [] = as \land False \land [] = bs \rangle $\\
+    = \{Rango vacío\}\\
+    $ False $\\
+
+    \bigbreak
+
+    Caso ($x \triangleright xs, y \triangleright ys$):\\
+    $ P.(x \triangleright xs).(y \triangleright ys) $\\
+    = \{Especificación\}\\
+    $ \langle \exists_{as,bs} :: (y \triangleright ys) = as \concat (x \triangleright xs) \concat bs \rangle $\\
+    = \{Partición de rango ($as = [] \lor as \neq []$)\}\\
+    $ \langle \exists_{as,bs} : as = [] : (y \triangleright ys) = as \concat (x \triangleright xs) \concat bs \rangle \lor \langle \exists_{as,bs} : as \neq [] : (y \triangleright ys) = as \concat (x \triangleright xs) \concat bs \rangle $\\
+    = \{Anidado, rango unitario\}\\
+    $ \langle \exists_{bs} :: (y \triangleright ys) = [] \concat (x \triangleright xs) \concat bs \rangle \lor \langle \exists_{as,bs} : as \neq [] : (y \triangleright ys) = as \concat (x \triangleright xs) \concat bs \rangle $\\
+    = \{Reemplazo de $as \leftarrow a \triangleright as$ (válido por $as \neq []$)\}\\
+    $ \langle \exists_{bs} :: (y \triangleright ys) = [] \concat (x \triangleright xs) \concat bs \rangle \lor \langle \exists_{a,as,bs} : (a \triangleright as) \neq [] : (y \triangleright ys) = (a \triangleright as) \concat (x \triangleright xs) \concat bs \rangle $\\
+    = \{Definición de $\concat$, igualdad de listas ($a \triangleright as \neq [] \equiv True$)\}\\
+    $ \langle \exists_{bs} :: (y \triangleright ys) = (x \triangleright xs) \concat bs \rangle \lor \langle \exists_{a,as,bs} :: (y \triangleright ys) = (a \triangleright as) \concat (x \triangleright xs) \concat bs \rangle $\\
+    = \{Igualdad de listas\}\\
+    $ \langle \exists_{bs} :: y = x \land ys = xs \concat bs \rangle \lor \langle \exists_{a,as,bs} :: y = a \land ys = as \concat (x \triangleright xs) \concat bs \rangle $\\
+    = \{Distributiva del $\land$ con respecto a $\exists$\}\\
+    $ y = x \land \langle \exists_{bs} :: ys = xs \concat bs \rangle \lor \langle \exists_{a,as,bs} :: y = a \land ys = as \concat (x \triangleright xs) \concat bs \rangle $\\
+    = \{Intercambio\}\\
+    $ y = x \land \langle \exists_{bs} :: ys = xs \concat bs \rangle \lor \langle \exists_{a,as,bs} : y = a : ys = as \concat (x \triangleright xs) \concat bs \rangle $\\
+    = \{Anidado, rango unitario\}\\
+    $ y = x \land \langle \exists_{bs} :: ys = xs \concat bs \rangle \lor \langle \exists_{as,bs} :: ys = as \concat (x \triangleright xs) \concat bs \rangle $\\
+    = \{Modularización, hipótesis inductiva\}\\
+    $ (y = x \land Q.xs.ys) \lor P.(x \triangleright xs).ys $
+
+    \bigbreak
+
+    Donde Q queda especificado por:
+
+    $ Q.xs.ys =  \langle \exists_{bs} :: ys = xs \concat bs \rangle $
+
+    \bigbreak
+
+    Caso ($xs = []$):\\
+    $ Q.[].ys $\\
+    = \{Especificación\}\\
+    $ \langle \exists_{bs} :: ys = [] \concat bs \rangle $\\
+    = \{Definición de $\concat$\}\\
+    $ \langle \exists_{bs} :: ys = bs \rangle $\\
+    = \{Intercambio\}\\
+    $ \langle \exists_{bs} : ys = bs \rangle : True $\\
+    = \{Término constante\}\\
+    $ True $
+
+    \bigbreak
+
+    Caso ($x \triangleright xs, ys = []$):\\
+    $ Q.(x \triangleright xs).[] $\\
+    = \{Especificación\}\\
+    $ \langle \exists_{bs} :: [] = (x \triangleright xs) \concat bs \rangle $\\
+    = \{Igualdad de listas\}\\
+    $ \langle \exists_{bs} :: [] = (x \triangleright xs) \land [] = bs \rangle $\\
+    = \{Igualdad de listas\}\\
+    $ \langle \exists_{bs} :: False \land [] = bs \rangle $\\
+    = \{Intercambio, rango vacío\}\\
+    $ False $
+
+    \bigbreak
+
+    Caso ($x \triangleright xs, y \triangleright ys$)\\
+    $ Q.(x \triangleright xs).(y \triangleright ys) $\\
+    = \{Especificación\}\\
+    $ \langle \exists_{bs} :: (y \triangleright ys) = (x \triangleright xs) \concat bs \rangle $\\
+    = \{Definición de $\concat$\}\\
+    $ \langle \exists_{bs} :: (y \triangleright ys) = x \triangleright (xs \concat bs) \rangle $\\
+    = \{Igualdad de listas\}\\
+    $ \langle \exists_{bs} :: y = x \land ys = xs \concat bs \rangle $\\
+    = \{Distributiva de $\land$ con el $\exists$\}\\
+    $ y = x \land \langle \exists_{bs} :: ys = xs \concat bs \rangle $\\
+    = \{Hipótesis inductiva\}\\
+    $ y = x \land Q.xs.ys $
+
+    \bigbreak
+
+    El programa completo queda entonces:
+    \[
+    \begin{array}{| r @{} l }
+        P ~ : ~ & [\text{A}] \mapsto [\text{A}] \mapsto \text{Bool} \\
+        \rule[-10pt]{0pt}{0pt}Q ~ : ~ & [\text{A}] \mapsto [\text{A}] \mapsto \text{Bool} \\
+        \cline{1-1}
+        \multicolumn{2}{|l}{\rule{0pt}{12pt}\eqmakebox[lhs][r]{$P.[].ys$} ~ \doteq ~ True} \\
+        \multicolumn{2}{|l}{\eqmakebox[lhs][r]{$P.(x \triangleright xs).[]$} ~ \doteq ~ False} \\
+        \multicolumn{2}{|l}{\eqmakebox[lhs][r]{$P.(x \triangleright xs).(y \triangleright ys)$} ~ \doteq ~ (y = x \land Q.xs.ys) \lor P.(x \triangleright xs).ys} \\
+        \multicolumn{2}{|l}{\eqmakebox[lhs][r]{$Q.[].ys$} ~ \doteq ~ True} \\
+        \multicolumn{2}{|l}{\eqmakebox[lhs][r]{$Q.(x \triangleright xs).[]$} ~ \doteq ~ False} \\
+        \multicolumn{2}{|l}{\eqmakebox[lhs][r]{$Q.(x \triangleright xs).(y \triangleright ys)$} ~ \doteq ~ y = x \land Q.xs.ys} \\
+    \end{array}
+    \]
+    
+
+\end{itemize}
+
+\textbf{Ejercicio 6}
+
+\begin{itemize}
+    \item $ P.xs = \langle\exists_{as,bs} : xs = as \concat bs : sum.as = sum.bs \rangle $
+
+    \bigbreak
+
+    Caso ($xs = []$):\\
+    $ P.[] $\\
+    = \{Especificación\}\\
+    $ \langle\exists_{as,bs} : [] = as \concat bs : sum.as = sum.bs \rangle $\\
+    = \{Propiedad de $\concat$\}\\
+    $ \langle\exists_{as,bs} : [] = as \concat bs \land as = [] \land bs = [] : sum.as = sum.bs \rangle $\\
+    = \{Anidado, rango vacío, término constante\}\\
+    $ sum.[] = sum.[] $\\
+    = \{Reflexividad de =\}\\
+    $ True $\\
+
+    \bigbreak
+
+    Caso ($x \triangleright xs$):\\
+    $ P.(x \triangleright xs) $\\
+    = \{Especificación\}\\
+    $ \langle\exists_{as,bs} : (x \triangleright xs) = as \concat bs : sum.as = sum.bs \rangle $\\
+    = \{Partición de rango ($as = [] \lor as \neq []$)\}\\
+    $ \langle\exists_{as,bs} : (x \triangleright xs) = as \concat bs \land as = [] : sum.as = sum.bs \rangle \lor \langle\exists_{as,bs} : (x \triangleright xs) = as \concat bs : sum.as = sum.bs \rangle $\\
+    = \{Anidado, rango unitario en el primer término.\\\hspace*{18pt}Reemplazo de $as \leftarrow a \triangleright as$ en el segundo término (válido por $as \neq []$)\}\\
+    $ \langle\exists_{bs} : (x \triangleright xs) = [] \concat bs : sum.[] = sum.bs \rangle \lor \langle\exists_{a,as,bs} : (x \triangleright xs) = (a \triangleright as) \concat bs : sum.(a \triangleright as) = sum.bs \rangle $\\
+    = \{Propiedad de $\concat$, propiedad de $sum$, igualdad de listas\}\\
+    $ \langle\exists_{bs} : (x \triangleright xs) = bs : 0 = sum.bs \rangle \lor \langle\exists_{a,as,bs} : x = a \land xs = as \concat bs : sum.(a \triangleright as) = sum.bs \rangle $\\
+    = \{Rango unitario, propiedad de $sum$ en el primer término.\\\hspace*{18pt}Anidado en el segundo término\}\\
+    $ x + sum.xs = 0 \lor \langle\exists_a : x = a : \langle\exists_{as,bs} : xs = as \concat bs : sum.(a \triangleright as) = sum.bs \rangle\rangle $\\
+    = \{Rango unitario, propiedad de $sum$\}\\
+    $ x + sum.xs = 0 \lor \langle\exists_{as,bs} : xs = as \concat bs : x + sum.as = sum.bs \rangle $
+
+    \bigbreak
+
+    No se puede aplicar la hipótesis inductiva, hay que generalizar.
+
+    \bigbreak
+
+    \item $ Q.n.xs = \langle\exists_{as,bs} : xs = as \concat bs : n + sum.as = sum.bs \rangle$
+
+    \bigbreak
+
+    Caso ($xs = []$):\\
+    $ Q.n.[] $\\
+    = \{Especificación\}\\
+    $ \langle\exists_{as,bs} : [] = as \concat bs : n + sum.as = sum.bs \rangle $\\
+    = \{Propiedad de $\concat$\}\\
+    $ \langle\exists_{as,bs} : [] = as \concat bs \land as = [] \land bs = [] : n + sum.as = sum.bs \rangle $\\
+    = \{Anidado, rango vacío, término constante\}\\
+    $ n + sum.[] = sum.[] $\\
+    = \{Definición de $sum$, aritmética\}\\
+    $ n = 0 $\\
+
+    \bigbreak
+
+    Caso ($x \triangleright xs$):\\
+    $ Q.n.(x \triangleright xs) $\\
+    = \{Especificación\}\\
+    $ \langle\exists_{as,bs} : (x \triangleright xs) = as \concat bs : n + sum.as = sum.bs \rangle $\\
+    = \{Partición de rango ($as = [] \lor as \neq []$)\}\\
+    $ \langle\exists_{as,bs} : (x \triangleright xs) = as \concat bs \land as = [] : n + sum.as = sum.bs \rangle \lor \langle\exists_{as,bs} : (x \triangleright xs) = as \concat bs : n + sum.as = sum.bs \rangle $\\
+    = \{Anidado, rango unitario en el primer término.\\\hspace*{18pt}Reemplazo de $as \leftarrow a \triangleright as$ en el segundo término (válido por $as \neq []$)\}\\
+    $ \langle\exists_{bs} : (x \triangleright xs) = [] \concat bs : n + sum.[] = sum.bs \rangle \lor \langle\exists_{a,as,bs} : (x \triangleright xs) = (a \triangleright as) \concat bs : n + sum.(a \triangleright as) = sum.bs \rangle $\\
+    = \{Propiedad de $\concat$, propiedad de $sum$, aritmética, igualdad de listas\}\\
+    $ \langle\exists_{bs} : (x \triangleright xs) = bs : n = sum.bs \rangle \lor \langle\exists_{a,as,bs} : x = a \land xs = as \concat bs : n + sum.(a \triangleright as) = sum.bs \rangle $\\
+    = \{Rango unitario, propiedad de $sum$ en el primer término.\\\hspace*{18pt}Anidado en el segundo término\}\\
+    $ x + sum.xs = n \lor \langle\exists_a : x = a : \langle\exists_{as,bs} : xs = as \concat bs : n + sum.(a \triangleright as) = sum.bs \rangle\rangle $\\
+    = \{Rango unitario, propiedad de $sum$\}\\
+    $ x + sum.xs = n \lor \langle\exists_{as,bs} : xs = as \concat bs : n + x + sum.as = sum.bs \rangle $\\
+    = \{Asociatividad de $+$\}\\
+    $ x + sum.xs = n \lor \langle\exists_{as,bs} : xs = as \concat bs : (n + x) + sum.as = sum.bs \rangle $\\
+    = \{Hipótesis inductiva\}\\
+    $ x + sum.xs = n \lor Q.(n + x).xs $\\
+
+    El resultado completo de esta derivación es:
+    \[
+    \begin{array}{| r @{} l }
+        P ~ : ~ & [\text{Num}] \mapsto \text{Bool} \\
+        \rule[-10pt]{0pt}{0pt}Q ~ : ~ & \text{Num} \mapsto [\text{Num}] \mapsto \text{Bool} \\
+        \cline{1-1}
+        \multicolumn{2}{|l}{\rule{0pt}{12pt}\eqmakebox[lhs][r]{$P.xs$} ~ \doteq ~ Q.0.xs} \\
+        \multicolumn{2}{|l}{\eqmakebox[lhs][r]{$Q.n.xs$} ~ \doteq ~ n = 0} \\
+        \multicolumn{2}{|l}{\eqmakebox[lhs][r]{$Q.n.(x \triangleright xs)$} ~ \doteq ~ x + sum.xs = n \lor Q.(x + n).xs}
+    \end{array}
+    \]
+
+
+\end{itemize}
+
+\textbf{Ejercicio 7}
+
+\begin{itemize}
+    \item $ P.xs.ys  = \langle Min_{i,j} : 0 \le i < \#xs \land 0 \le j < \#ys : | xs.i - ys.j | \rangle $
+
+    \bigbreak
+
+    Caso ($xs = []$):\\
+    $ P.[].ys $\\
+    = \{Especificación\}\\
+    $ \langle Min_{i,j} : 0 \le i < \#[] \land 0 \le j < \#ys : | [].i - ys.j | \rangle $\\
+    = \{Anidado\}\\
+    $ \langle Min_i : 0 \le i < \#[] : \langle Min_j : 0 \le j < \#ys : | [].i - ys.j | \rangle\rangle $\\
+    = \{Definición de \#\}\\
+    $ \langle Min_i : 0 \le i < 0 : \langle Min_j : 0 \le j < \#ys : | [].i - ys.j | \rangle\rangle $\\
+    = \{Rango vacío\}\\
+    $ +\infty $
+
+    Análogamente se resuelve $ P.xs.[] $
+
+    \bigbreak
+
+    Caso ($x \triangleright xs, y \triangleright ys$):\\
+    $ P.(x \triangleright xs).(y \triangleright ys) $\\
+    = \{Especificación\}\\
+    $ \langle Min_{i,j} : 0 \le i < \#(x \triangleright xs) \land 0 \le j < \#(y \triangleright ys) : | (x \triangleright xs).i - (y \triangleright ys).j | \rangle $\\
+    = \{Definición de \#\}\\
+    $ \langle Min_{i,j} : 0 \le i < 1 + \#xs \land 0 \le j < 1 + \#ys : | (x \triangleright xs).i - (y \triangleright ys).j | \rangle $\\
+    = \{Separación de un término, cambio de variable\}\\
+    $ | (x \triangleright xs).0 - (y \triangleright ys).0 | ~`Min`~ \langle Min_{i,j} : 0 \le i < \#xs \land 0 \le j < \#ys : | (x \triangleright xs).(i + 1) - (y \triangleright ys).(j + 1) | \rangle $\\
+    = \{Propiedad de .\}\\
+    $ | x - y | ~`Min`~ \langle Min_{i,j} : 0 \le i < \#xs \land 0 \le j < \#ys : | xs.i - ys.j | \rangle $\\
+    = \{Hipótesis inductiva\}\\
+    $ | x - y | ~`Min`~ P.xs.ys $\\
+
+\end{itemize}
+
+\textbf{Ejercicio 8}
+
+\begin{itemize}
+    \item $pares.xs = \langle N_i : 0 \le i < \#xs : par.(xs.i) \rangle$
+
+    Caso base:\\
+    $ pares.[] $\\
+    = \{Especificación\}\\
+    $ \langle N_i : 0 \le i < \#[] : par.([].i) \rangle $\\
+    = \{Definición de \#, rango vacío\}\\
+    $ 0 $
+
+    \bigbreak
+
+    Caso inductivo:\\
+    $ pares.(x \triangleright xs) $\\
+    = \{Especificación\}\\
+    $ \langle N_i : 0 \le i < \#(x \triangleright xs) : par.((x \triangleright xs).i) \rangle $\\
+    = \{Definición de \#\}\\
+    $ \langle N_i : 0 \le i < 1 + \#xs : par.((x \triangleright xs).i) \rangle $\\
+    = \{Separación de un término, cambio de variable\}\\
+    $ \langle N :: par.((x \triangleright xs).0) \rangle + \langle N_i : 0 \le i < \#xs : par.((x \triangleright xs).(i + 1)) \rangle $\\
+    = \{Propiedad de .\}\\
+    $ \langle N :: par.(x) \rangle + \langle N_i : 0 \le i < \#xs : par.(xs.i) \rangle $\\
+    = \{Hipótesis inductiva\}\\
+    $ \langle N :: par.(x) \rangle + pares.xs $\\
+
+    El primer término es 1 o 0 dependiendo si x es par o no, es decir, tenemos:
+    \[
+    \begin{array}{| r @{} l }
+        \rule[-10pt]{0pt}{0pt}pares ~ : ~ & [\text{Num}] \mapsto \text{Num} \\
+        \cline{1-1}
+        \multicolumn{2}{|l}{\rule{0pt}{12pt}\eqmakebox[lhs][r]{$pares.[]$} ~ \doteq ~ 0} \\
+        \multicolumn{2}{|l}{\eqmakebox[lhs][r]{$pares.((2n) \triangleright xs)$} ~ \doteq ~ 1 + pares.xs} \\
+        \multicolumn{2}{|l}{\eqmakebox[lhs][r]{$pares.((2n + 1) \triangleright xs)$} ~ \doteq ~ pares.xs}
+    \end{array}
+    \]
+
+    Análogamente podemos derivar $impares.xs = \langle N_i : 0 \le i < \#xs : impar.(xs.i) \rangle$
+
+    \bigbreak
+
+    Como queremos recorrer la lista una sola vez, necesitamos usar tuplas.
+
+    \item $f.xs = (pares.xs, impares.xs)$
+
+    \bigbreak
+
+    Caso ($xs = []$):\\
+    $f.[]$\\
+    = \{Especificación\}\\
+    $(pares.[], impares.[])$\\
+    = \{Definición de $pares$ e $impares$\}\\
+    $(0, 0)$
+
+    \bigbreak
+
+    Caso ($2n \triangleright xs$):\\
+    $f.(2n \triangleright xs)$\\
+    = \{Especificación\}\\
+    $(pares.(2n \triangleright xs), impares.(2n \triangleright xs))$\\
+    = \{Definición de $pares$ e $impares$\}\\
+    $(1 + pares.xs, impares.xs)$\\
+    = \{Introducción de $a$ y $b$ como definiciones locales\}\\
+    $(1 + a, b)$\\
+    $[\![a = pares.xs, b = impares.xs ]\!]$\\
+    = \{Igualdad de pares\}\\
+    $(1 + a, b)$\\
+    $[\![(a, b) = (pares.xs, impares.xs) ]\!]$\\
+    = \{Hipótesis inductiva\}\\
+    $(1 + a, b)$\\
+    $[\![(a, b) = f.xs ]\!]$
+
+    \bigbreak
+
+    El caso $(2n + 1) \triangleright xs$ se resuelve de la misma manera.
+
+    \bigbreak
+
+    Así, la función $f$ queda:
+    \[
+    \begin{array}{| r @{} l }
+        \rule[-10pt]{0pt}{0pt}f ~ : ~ & [\text{Num}] \mapsto \text{(Num, Num)} \\
+        \cline{1-1}
+        \multicolumn{2}{|l}{\rule{0pt}{12pt}\eqmakebox[lhs][r]{$f.[]$} ~ \doteq ~ (0, 0)} \\
+        \multicolumn{2}{|l}{\eqmakebox[lhs][r]{$f.((2n) \triangleright xs)$} ~ \doteq ~ (1 + a, b)} \\
+        \multicolumn{2}{|l}{\eqmakebox[lhs][r]{$f.((2n + 1) \triangleright xs)$} ~ \doteq ~ (a, 1 + b)} \\
+        \multicolumn{2}{|l}{\eqmakebox[lhs][r]{} ~  ~ \hspace*{15px}[\![(a, b) = f.xs]\!]}
+    \end{array}
+    \]
 
 \end{itemize}
 
