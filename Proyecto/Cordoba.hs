@@ -71,25 +71,21 @@ join (x:xs) = x ++ join xs
 
 -- Encripta una lista de "chunks"
 encryptChunks :: [[Bit]] -> [Bit] -> [[Bit]]
-encryptChunks xs ks = fst (encryptChunks' xs ks)
+encryptChunks xs ks = encryptChunks' xs [] ks
 
-encryptChunks' :: [[Bit]] -> [Bit] -> ([[Bit]], [Bit])
-encryptChunks' [] _ = ([], [])
-encryptChunks' xs c = (a ++ [e], e)
-  where (a, b) = encryptChunks' (init xs) c
-        x = last xs
-        e = (x `lxor` b) `lxor` c
+encryptChunks' :: [[Bit]] -> [Bit] -> [Bit] -> [[Bit]]
+encryptChunks' [] _ _ = []
+encryptChunks' (xs:xxs) ys ks = [a] ++ encryptChunks' xxs a ks
+  where a = (xs `lxor` ys) `lxor` ks
 
 -- Desencripta una lista de "chunks"
 decryptChunks :: [[Bit]] -> [Bit] -> [[Bit]]
-decryptChunks xs ks = fst (decryptChunks' xs ks)
+decryptChunks xs ks = decryptChunks' xs [] ks
 
-decryptChunks' :: [[Bit]] -> [Bit] -> ([[Bit]], [Bit])
-decryptChunks' [] _ = ([], [])
-decryptChunks' xs c = (a ++ [e], x)
-  where (a, b) = decryptChunks' (init xs) c
-        x = last xs
-        e = (x `lxor` b) `lxor` c
+decryptChunks' :: [[Bit]] -> [Bit] -> [Bit] -> [[Bit]]
+decryptChunks' [] _ _ = []
+decryptChunks' (xs:xxs) ys ks = [a] ++ decryptChunks' xxs xs ks
+  where a = (xs `lxor` ys) `lxor` ks
 
 -- Encripta un texto
 encrypt :: [Char] -> [Bit] -> [Char]
