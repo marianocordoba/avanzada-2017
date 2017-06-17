@@ -1,0 +1,241 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper,margin=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{eqparbox}
+\usepackage[fleqn]{mathtools}
+
+\setlength{\mathindent}{0pt}
+\newcommand{\concat}{%
+  \mathbin{{+}\mspace{-8mu}{+}}%
+}
+
+\title{Practico 9 - Lógica de Hoare}
+\author{Mariano Córdoba}
+
+\begin{document}
+
+\begin{center}
+\large \underline{\textbf{Práctico 9 - Lógica de Hoare}}
+\end{center}
+
+\textbf{Ejercicio 1}
+
+\begin{itemize}
+    \item (a) $\{wp\} ~ x \coloneqq (x - y) * (x + y) ~ \{(x + y^2 = 0)\}$
+
+    \bigbreak
+
+    $wp.x = x + y^2 = 0 ~(x \coloneqq (x - y) * (x + y))$\\
+    = \{Definición de $wp$\}\\
+    $(x - y) * (x + y) + y^2 = 0$\\
+    = \{Aritmética\}\\
+    $x^2 + xy - yx - y^2 + y^2 = 0$\\
+    = \{Aritmética\}\\
+    $x = 0 \rightarrow $ precondición más débil 
+
+    \item (b) $\{wp\} ~ q, r \coloneqq q + 1, r - y ~ \{q * y + r = x\}$
+
+    \bigbreak
+
+    $wp.x = q * y + r = x ~(q, r \coloneqq q + 1, r - y)$\\
+    = \{Definición de $wp$\}\\
+    $(q + 1) * y + (r - y) = x$\\
+    = \{Aritmética\}\\
+    $qy + y + (r - y) = x$\\
+    = \{Aritmética\}\\
+    $x = qy + r$
+
+    \item (c) \\
+        $\{wp\}\\ 
+        \hspace*{20pt}a \coloneqq a \equiv b;\\ 
+        \hspace*{20pt}b \coloneqq a \equiv b;\\ 
+        \hspace*{20pt}a \coloneqq a \equiv b;\\ 
+        \{(a \equiv B) \land (b \equiv A)\}$
+
+    \bigbreak
+
+    $wp.a = (a \equiv b).(wp.b = (a \equiv b).(wp.a = (a \equiv b)((a \equiv B) \land (b \equiv A))))$\\
+    = \{Definición de $wp$\}\\
+    $wp.a = (a \equiv b).(wp.b = (a \equiv b).((a \equiv b \equiv B) \land (b \equiv A)))$\\
+    = \{Definición de $wp$\}\\
+    $wp.a = (a \equiv b).((a \equiv a \equiv b \equiv B) \land (a \equiv b \equiv A))$\\
+    = \{Definición de $wp$\}\\
+    $(a \equiv b \equiv a \equiv b \equiv b \equiv B) \land (a \equiv b \equiv b \equiv A)$\\
+    = \{Lógica\}\\
+    $(b \equiv B) \land (a \equiv A)$
+
+\end{itemize}
+
+\textbf{Ejercicio 2}
+
+\begin{itemize}
+    \item $\{A = q * B + r\} ~ q \coloneqq E; r \coloneqq r - B ~ \{A = q * B + r\}$
+
+    \bigbreak
+
+    $wp.(q \coloneqq E).(wp.(r \coloneqq r - B).(A = q * B + r))$\\
+    = \{Definición de $wp$\}\\
+    $wp.(q \coloneqq E).(A = q * B + r - B)$\\
+    = \{Definición de $wp$\}\\
+    $A = E * B + r - B$\\
+    = \{Antecedente\}\\
+    $q * B + r = E * B + r - B$\\
+    = \{Aritmética\}\\
+    $E = \frac{q * B + B}{B}$\\
+    = \{Aritmética\}\\
+    $E = \frac{q * B}{B} + \frac{B}{B}$\\
+    = \{Aritmética\}\\
+    $E = q + 1$
+
+    \item $\{x * y + p * q = N\} ~ x \coloneqq x - p; q \coloneqq E ~ \{x * y + p * q = N\}$
+
+    \bigbreak
+
+    $wp.(x \coloneqq x - p).(wp.(q \coloneqq E).(x * y + p * q = N))$\\
+    = \{Definición de $wp$\}\\
+    $wp.(x \coloneqq x - p).(x * y + p * E = N)$\\
+    = \{Definición de $wp$\}\\
+    $(x - p) * y + p * E = N$\\
+    = \{Antecedente\}\\
+    $(x - p) * y + p * E = x * y + p * q$\\
+    = \{Aritmética\}\\
+    $E = \frac{x * y + p * q - x * y + p * y}{p}$\\
+    = \{Aritmética\}\\
+    $E = \frac{p * q + p * y}{p}$\\
+    = \{Aritmética\}\\
+    $E = q + y$
+
+    \bigbreak
+
+    Verificación:\\
+    $x * y + p * q = N \Rightarrow wp.(x \coloneqq x - p).(wp.(q \coloneqq q + y).(x * y + p * q = N))$\\
+    = \{Definición de $wp$\}\\
+    $x * y + p * q = N \Rightarrow wp.(x \coloneqq x - p).(x * y + p * (q + y) = N)$\\
+    = \{Definición de $wp$\}\\
+    $x * y + p * q = N \Rightarrow (x - p) * y + p * (q + y) = N$\\
+    = \{Aritmética\}\\
+    $x * y + p * q = N \Rightarrow x * y - p * y + p * q + p * y = N$\\
+    = \{Aritmética\}\\
+    $x * y + p * q = N \Rightarrow x * y + p * q = N$\\
+    = \{Lógica\}\\
+    $True$
+
+\end{itemize}
+
+\textbf{Ejercicio 3}
+
+\begin{itemize}
+    \item $\{x = A \land y = B\}\\
+            \hspace*{20pt}x \coloneqq x - y;\\
+            \hspace*{20pt}y \coloneqq x + y;\\
+            \hspace*{20pt}x \coloneqq y - x;\\
+            \{x = B \land y = A\}$
+
+    \bigbreak
+
+    $x = A \land y = B \Rightarrow wp.(x \coloneqq x - y).(wp.(y \coloneqq x + y).(wp.(x \coloneqq y - x).(x = B \land y = A)))$\\
+    = \{Definición de $wp$\}\\
+    $x = A \land y = B \Rightarrow wp.(x \coloneqq x - y).(wp.(y \coloneqq x + y).(y - x = B \land y = A))$\\
+    = \{Definición de $wp$\}\\
+    $x = A \land y = B \Rightarrow wp.(x \coloneqq x - y).((x + y) - x = B \land x + y = A)$\\
+    = \{Definición de $wp$\}\\
+    $x = A \land y = B \Rightarrow ((x - y) + y) - (x - y) = B \land (x - y) + y = A$\\
+    = \{Aritmética\}\\
+    $x = A \land y = B \Rightarrow y = B \land x = A$\\
+    = \{Lógica\}\\
+    $True$
+
+\end{itemize}
+
+\textbf{Ejercicio 4}
+
+\begin{itemize}
+    \item (a)\\
+            $\{True\}\\
+            \hspace*{20pt}if ~x \ge y \rightarrow skip\\
+            \hspace*{20pt}[] ~x \le y \rightarrow x, y \coloneqq y, x\\
+            \hspace*{20pt}fi\\
+            \{x \ge y\}$
+
+    \bigbreak
+
+    (1)\\
+    $True \Rightarrow x \ge y \lor x \le y$\\
+    = \{Tricotomía, lógica\}\\
+    $True$
+
+    \bigbreak
+
+    (2)\\
+    $True \land x \ge y \Rightarrow wp.(skip).(x \ge y)$\\
+    = \{Absorción para el $\land$, definición de $wp$\}\\
+    $x \ge y \Rightarrow x \ge y$\\
+    = \{Lógica\}\\
+    $True$
+
+    $True \land x \le y \Rightarrow wp.(x, y \coloneqq y, x).(x \ge y)$\\
+    = \{Absorción para el $\land$, definición de $wp$\}\\
+    $x \le y \Rightarrow y \ge x$\\
+    = \{Lógica\}\\
+    $True$
+
+    \item (b)\\
+            $\{True\}\\
+            \hspace*{20pt}x, y \coloneqq y * y, x * x;\\
+            \hspace*{20pt}if~ x \ge y \rightarrow x \coloneqq x + 1\\
+            \hspace*{20pt}[]~ x \le y \rightarrow y \coloneqq y - x\\
+            \hspace*{20pt}fi\\
+            \{x \ge 0 \land y \ge 0\}$
+
+    \bigbreak
+
+    $wp.if.(x \ge 0 \land y \ge 0)$\\
+    = \{Definición de $wp$\}\\
+    $(x \ge y \lor x \le y) \land (x \ge y \Rightarrow wp.(x \coloneqq x + 1).(x \ge 0 \land y \ge 0)) \land (x \le y \Rightarrow wp.(y \coloneqq y - x).(x \ge 0 \land y \ge 0))$\\
+    = \{Definición de $wp$, aritmética\}\\
+    $(x \ge y \lor x \le y) \land (x \ge y \Rightarrow x \ge -1 \land y \ge 0) \land (x \le y \Rightarrow x \ge 0 \land y \ge x)$
+
+    \bigbreak
+    $True \Rightarrow wp.(x, y \coloneqq y *y, x * x).(wp.if.(x \ge 0 \land y \ge 0))$\\
+    = \{Definición de $wp$\}\\
+    $True \Rightarrow wp.(x, y \coloneqq y * y, x * x)((x \ge y \lor x \le y) \land (x \ge y \Rightarrow x \ge -1 \land y \ge 0) \land (x \le y \Rightarrow x \ge 0 \land y \ge x))$\\
+    = \{Lógica, definición de $wp$, aritmética\}\\
+    $(y^2 \ge x^2 \lor y^2 \le x^2) \land (y^2 \ge x^2 \Rightarrow y^2 \ge -1 \land x^2 \ge 0) \land (y^2 \le x^2 \Rightarrow y^2 \ge 0 \land x^2 \ge y^2)$\\
+    = \{Tricotomía, $(\forall_n :: n^2 \ge 0)$, lógica\}\\
+    $True \land (y^2 \ge x^2 \Rightarrow True) \land (y^2 \le x^2 \Rightarrow x^2 \ge y^2)$\\
+    = \{Lógica\}\\
+    $True$
+
+    \item (c)\\ 
+            $\{True\}\\
+            \hspace*{20pt}if~ \neg a \lor b \rightarrow a \coloneqq \neg a\\
+            \hspace*{20pt}[]~ a \lor \neg b \rightarrow b \coloneqq \neg b\\
+            \hspace*{20pt}fi\\
+            \{a \lor b\}$
+
+    \bigbreak
+
+    (1)\\
+    $True \Rightarrow (\neg a \lor b) \lor (a \lor \neg b)$\\
+    = \{Lógica\}\\
+    $True$
+
+    \bigbreak
+
+    (2)\\
+    $\neg a \lor b \Rightarrow wp.(a \coloneqq \neg a).(a \lor b)$\\
+    = \{Definición de $wp$\}\\
+    $\neg a \lor b \Rightarrow \neg a \lor b$\\
+    = \{Lógica\}\\
+    $True$
+
+    $a \lor \neg b \Rightarrow wp.(b \coloneqq \neg b).(a \lor b)$\\
+    = \{Definición de $wp$\}\\
+    $a \lor \neg b \Rightarrow a \lor \neg b$\\
+    = \{Lógica\}\\
+    $True$
+
+\end{itemize}
+
+\end{document}
