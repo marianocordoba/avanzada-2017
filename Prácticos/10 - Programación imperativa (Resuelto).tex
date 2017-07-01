@@ -1,0 +1,152 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper,margin=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{eqparbox}
+\usepackage[fleqn]{mathtools}
+
+\setlength{\mathindent}{0pt}
+\newcommand{\concat}{%
+  \mathbin{{+}\mspace{-8mu}{+}}%
+}
+
+\title{Practico 10 - Programación imperativa}
+\author{Mariano Córdoba}
+
+\begin{document}
+
+\begin{center}
+\large \underline{\textbf{Práctico 10 - Programación imperativa}}
+\end{center}
+
+\textbf{Ejercicio 1}
+
+\begin{itemize}
+    \item (a)\\
+            $exp(x, y) = (\\
+            \hspace*{41pt}y = 0 \rightarrow 1\\
+            \hspace*{30pt}[]~ y \neq 0 \rightarrow x * exp(x, y - 1)\\
+            )$
+
+    $\{R: x = X \land y = Y \land x \ge 0 \land y \ge 0\}$\\
+    $\{P: y \ge 0 \land r * x^y = X^Y\}$\\
+    $\{Q: r = X^Y\}$
+
+    $\{B: y \neq 0\}$
+ 
+    \bigbreak
+
+    Como r no está definida, debemos derivar un programa S' para inicializar dicha variable:
+
+    $wp.(r \coloneqq E).(y \ge 0 \land r * x^y = X^Y)$\\
+    = \{Definición de $wp$\}\\
+    $y \ge 0 \land E * x^y = X^Y$\\
+    = \{Precondición, lógica\}\\
+    $E * X^Y = X^Y$\\
+    = \{Aritmética\}\\
+    $E \coloneqq 1$
+
+    \bigbreak
+
+    Luego procedemos a derivar el ciclo:
+
+    $P \land y \neq 0$\\
+    = \{Reemplazando P\}\\
+    $y \ge 0 \land r * x^y = X^Y \land y \neq 0$\\
+    = \{Definición de $exp$\}\\
+    $y \ge 0 \land r * x * x^{y - 1} = X^Y \land y \neq 0$\\
+    = \{Sustitución en predicado\}\\
+    $P(r, y \coloneqq r * x, y - 1)$
+
+    \bigbreak
+
+    El programa queda de la siguiente forma:
+
+    $[\![\\
+    var~ x, y, r : Int\\
+    con~ X, Y : Int\\
+    \{R: x = X \land y = Y \land x \ge 0 \land y \ge 0 \}\\
+    r \coloneqq 1\\
+    \{P: y \ge 0 \land r * x^y = X^Y\}\\
+    \textbf{\underline{do}}~ y \neq 0 \rightarrow r, y \coloneqq r * x, y - 1\\
+    \textbf{\underline{od}}\\
+    \{Q: r = X^Y\}\\
+    ]\!]$
+
+    \bigbreak
+
+    \item (b)\\
+          $\hspace*{10pt}(y = 0 \rightarrow 1\\
+          \hspace*{4pt}[]~y \neq 0 \rightarrow (\\
+          \hspace*{35pt}y ~mod~ 2 = 0 \rightarrow exp(x * x, y ~div~ 2)\\
+          \hspace*{25pt}[]~y~mod~2 = 1 \rightarrow x * exp(x, y - 1)\\
+          \hspace*{25pt})\\
+          \hspace*{14pt})$
+
+    $\{R: x = X \land y = Y \land x \ge 0 \land y \ge 0\}$\\
+    $\{P: y \ge 0 \land r * x^y = X^Y\}$\\
+    $\{Q: r = X^Y\}$
+
+    $\{B: y \neq 0\}$
+
+    \bigbreak
+
+    Como r no está definida, necesitamos derivar un programa S' 
+    para inicializar dicha variable. Usaremos el programa que 
+    derivamos en el caso anterior.
+
+    \bigbreak
+
+    Procedemos a derivar el ciclo:
+
+    $P \land y \neq 0 \land y ~mod~ 2 = 0$\\
+    = \{Reemplazando P\}\\
+    $y \ge 0 \land r * x^y = X^Y \land y \neq 0 \land y ~mod~ 2 = 0$\\
+    = \{Definición de $exp$\}\\
+    $y \ge 0 \land r * (x * x)^{y ~div~ 2} = X^Y \land y \neq 0 \land y ~mod~ 2 = 0$\\
+    = \{Sustitución de predicado\}\\
+    $P(x, y \coloneqq x * x, y ~div~ 2)$\\
+
+    $P \land y \neq 0 \land y ~mod~ 2 = 1$\\
+    = \{Reemplazando P\}\\
+    $y \ge 0 \land r * x^y = X^Y \land y \neq 0 \land y ~mod~ 2 = 1$\\
+    = \{Definición de $exp$\}\\
+    $y \ge 0 \land r * x * x^{y - 1} = X^Y \land y \neq 0 \land y ~mod~ 2 = 1$\\
+    = \{Sustitución en predicado\}\\
+    $P(r, y \coloneqq r * x, y - 1)$
+
+    \bigbreak
+
+    El programa queda de la siguiente forma:
+
+    $[\![\\
+    var~ x, y, r : Int\\
+    con~ X, Y : Int\\
+    \{R: x = X \land y = Y \land x \ge 0 \land y \ge 0 \}\\
+    r \coloneqq 1\\
+    \{P: y \ge 0 \land r * x^y = X^Y\}\\
+    \textbf{\underline{do}}~ y \neq 0 \rightarrow (\\
+    \hspace*{28pt}\textbf{\underline{if}}~y ~mod~ 2 = 0 \rightarrow r, y \coloneqq r * x, y - 1\\
+    \hspace*{28pt}[]~y ~mod~ 2 = 1 \rightarrow r, y \coloneqq x * x, y ~div~ 2\\
+    \hspace*{28pt}\textbf{\underline{fi}}\\
+    \hspace*{18pt})\\
+    \textbf{\underline{od}}\\
+    \{Q: r = X^Y\}\\
+    ]\!]$
+
+    \bigbreak
+
+\end{itemize}
+
+\textbf{Ejercicio 2}
+
+\begin{itemize}
+  \item $\{R: n > 0\}$\\
+        $\{Q: 0 < k \le n \land n < 2 * k \land \langle\exists_j : 0 \le j : k = 2^j\rangle$\\
+        $\{P: 0 < k \le n \land \langle\exists_j : 0 \le j : k = 2^j\rangle$
+
+  $\{B: n \ge 2 * k\}$
+  
+\end{itemize}
+
+\end{document}
